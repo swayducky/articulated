@@ -109,10 +109,13 @@ def main(opt):
 
     source_image = resize(source_image, opt.img_shape)[..., :3]
     driving_video = [resize(frame, opt.img_shape)[..., :3] for frame in driving_video]
+    print("==== Loading checkpoint...")
     generator, region_predictor, avd_network = load_checkpoints(config_path=opt.config,
                                                                 checkpoint_path=opt.checkpoint, cpu=opt.cpu)
+    print("==== Generating animation...")
     predictions = make_animation(source_image, driving_video, generator, region_predictor, avd_network,
                                  animation_mode=opt.mode, cpu=opt.cpu)
+    print("==== Saving animation...")
     imageio.mimsave(opt.result_video, [img_as_ubyte(frame) for frame in predictions], fps=fps)
 
 
